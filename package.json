@@ -10,6 +10,7 @@
     "@openzeppelin/contracts": "^2.5.0",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
+    "dotenv": "^8.2.0",
     "moment": "^2.24.0"
   },
   "devDependencies": {},

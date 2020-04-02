@@ -23,6 +23,9 @@
 //
 // const fs = require('fs');
 // const mnemonic = fs.readFileSync(".secret").toString().trim();
+require('dotenv').config();
+
+const host = process.env.host || "127.0.0.1";
 
 module.exports = {
   /**
@@ -48,7 +51,7 @@ module.exports = {
       network_id: "*",       // Any network (default: none)
      },
      lan: {
-      host: "192.168.0.13",     // Localhost (default: none)
+      host: host,     // Localhost (default: none)
       port: 8545,            // Standard Ethereum port (default: none)
       network_id: "*",       // Any network (default: none)
      },

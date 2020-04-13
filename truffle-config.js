@@ -55,7 +55,7 @@ module.exports = {
     celo: {
       host: "127.0.0.1",
       port: 8545,
-      network_id: 40120,
+      network_id: 44786,
     },
 
     // Another network with more advanced options...

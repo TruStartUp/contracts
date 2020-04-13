@@ -112,3 +112,4 @@ temp/
 
 # dotenv environment variables file
 .env*
+build/

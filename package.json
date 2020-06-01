@@ -2,25 +2,15 @@
   "name": "contracts",
   "version": "1.0.0",
   "description": "",
-  "main": "truffle-config.js",
-  "directories": {
-    "test": "test"
-  },
-  "dependencies": {
-    "@openzeppelin/contracts": "^2.5.0",
-    "chai": "^4.2.0",
-    "chai-as-promised": "^7.1.1",
-    "moment": "^2.24.0"
-  },
-  "devDependencies": {},
-  "scripts": {
-    "build": "truffle compile && cp -r build/contracts ../celodemo/app/",
-    "test": "test"
-  },
   "repository": {
     "type": "git",
     "url": "keybase://team/truchain/celo_contracts"
   },
-  "author": "Mesi Rendon <mesi@trustartup.co>",
-  "license": "ISC"
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "bs58": "^4.0.1",
+    "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1"
+  }
 }

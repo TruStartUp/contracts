@@ -8,8 +8,8 @@ contract Hub {
   constructor() public {
   }
 
-  function addHashingSpace(bytes32 _ipfsHash, string memory _name) public {
-    HashingSpaceStandard _hashingSpace = new HashingSpaceStandard(_ipfsHash, _name);
+  function addHashingSpace(bytes32 _imgHash, string memory _name) public {
+    HashingSpaceStandard _hashingSpace = new HashingSpaceStandard(_imgHash, _name);
     _userHashingSpaces[msg.sender].push(_hashingSpace);
   }
 

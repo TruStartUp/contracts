@@ -8,7 +8,7 @@ chai.use(chaiAsPromised);
 
 const { expect } = chai;
 
-const ipfsBytes32 = '0x318787a718972a977081bdae6d8adec7694eb99b0d9f8c83fc070d4db23a0287';
+const imageHash = '0xdde9efca1ecfbadf34253c9a6ab6812280da630a1d96087e64f87b3935bfcfef';
 
 contract('Hub', (accounts) => {
   const [
@@ -29,7 +29,7 @@ contract('Hub', (accounts) => {
   });
   describe('Operational', () => {
     it('should add a hashing space upon name and image hash', () => {
-      const addHashingSpaceSignature = hub.methods.addHashingSpace(ipfsBytes32, 'web');
+      const addHashingSpaceSignature = hub.methods.addHashingSpace(imageHash, 'web');
       return addHashingSpaceSignature.estimateGas({from: alice})
         .then(gas => addHashingSpaceSignature.send({from: alice, gas}))
         .then(() => hub.methods.userHashingSpaces(0).call({from: alice}))

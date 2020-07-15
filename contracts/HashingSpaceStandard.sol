@@ -1,19 +1,20 @@
 pragma solidity >= 0.5.0 < 0.7.0;
 
 contract HashingSpaceStandard {
-  bytes32 public ipfsHash;
+  bytes32 public imgHash;
   string public name;
-  bytes32[100] hs;
+  mapping(bytes32 => bool) hs;
 
-  constructor(bytes32 _ipfsHash, string memory _name) public {
-    ipfsHash = _ipfsHash;
+  constructor( bytes32 _imgHash, string memory _name ) public {
+    imgHash = _imgHash;
     name = _name;
-    for(uint i = 0; i < 100; i++) {
-      hs[i] = keccak256(abi.encodePacked(ipfsHash, i));
+    for(uint i = 0; i < 5; i++) {
+      bytes32 hashI = keccak256(abi.encodePacked(imgHash, i));
+      hs[hashI] = true;
     }
   }
 
-  function validate(bytes32 _test, uint _idx) public view returns (bool){
-    return keccak256(abi.encodePacked(_test)) == keccak256(abi.encodePacked(hs[_idx]));
+  function validate( bytes32 _testHash ) public view returns (bool){
+    return hs[_testHash];
   }
 }

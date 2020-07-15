@@ -6,6 +6,9 @@
     "type": "git",
     "url": "keybase://team/truchain/celo_contracts"
   },
+  "scripts": {
+    "build": "truffle compile && rm -rf ../website/src/contracts && cp -r ./build/contracts ../website/src"
+  },
   "author": "",
   "license": "ISC",
   "devDependencies": {

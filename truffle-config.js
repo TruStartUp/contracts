@@ -21,6 +21,7 @@
 // const infuraKey = "fj4jll3k.....";
 //
 const fs = require('fs');
+const mnemonicRSK = fs.readFileSync(".secretRSK").toString().trim();
  const mnemonic = fs.readFileSync(".secret").toString().trim();
 
 module.exports = {
@@ -57,10 +58,16 @@ module.exports = {
       // websockets: true        // Enable EventEmitter interface for web3 (default: false)
     // },
 
+    TestRSK: {
+      provider: () => new HDWalletProvider(mnemonicRSK, 'https://public-node.testnet.rsk.co/2.0.1/'),
+      network_id: 31,
+      gasPrice: Math.floor({"jsonrpc":"2.0","id":1,"result":"0x3938700"} * 1.1),
+      networkCheckTimeout: 1e9
+    },
     // Useful for deploying to a public network.
     // NB: It's important to wrap the provider as a function.
     ropsten: {
-      provider: () => new HDWalletProvider(mnemonic, `https://ropsten.infura.io/v3/b63207ce3fed4d33bab6226e4bd340c2`),
+      provider: () => new HDWalletProvider(mnemonic, `https://ropsten.infura.io/v3/ef0f891f97914f7b8cb7efe22c915634`),
       network_id: 3,       // Ropsten's id
       gas: 5500000,        // Ropsten has a lower block limit than mainnet
       confirmations: 2,    // # of confs to wait between deployments. (default: 0)

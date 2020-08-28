@@ -63,7 +63,7 @@ module.exports = {
       network_id: 31,
       gasPrice: Math.floor({"jsonrpc":"2.0","id":1,"result":"0x3938700"} * 1.1),
       networkCheckTimeout: 1e9
-    }
+    },
     // Useful for deploying to a public network.
     // NB: It's important to wrap the provider as a function.
     ropsten: {

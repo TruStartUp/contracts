@@ -109,7 +109,7 @@ tmp/
 temp/
 # secret on chain
 .secret
-
+.secretRSK
 # End of https://www.gitignore.io/api/node
 
 # dotenv environment variables file

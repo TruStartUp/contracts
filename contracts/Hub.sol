@@ -3,17 +3,38 @@ pragma solidity >= 0.5.0 < 0.7.0;
 import "./HashingSpaceStandard.sol";
 
 contract Hub {
-  mapping(address => HashingSpaceStandard[]) _userHashingSpaces;
+  mapping(address => userHS) userData;
+  address public owner;
+  struct userHS {
+    mapping(bytes32 => uint) apiIndex;
+    bytes32[] apiKeys;
+    HashingSpaceStandard[] userHashingSpaces;
+  }
 
   constructor() public {
+    owner = msg.sender;
   }
 
-  function addHashingSpace(bytes32 _imgHash, string memory _name) public {
+  modifier onlyOwner() {
+    require(msg.sender == owner);
+    _;
+  }
+
+  function addHashingSpace(bytes32 _imgHash, string memory _name, address _user) public onlyOwner {
+    userHS storage userInfo = userData[_user];
+    bytes32 _apiKey = keccak256(abi.encodePacked(_imgHash, _name, block.number));
+    userInfo.apiKeys.push(_apiKey);
+    userInfo.apiIndex[_apiKey] = userInfo.apiKeys.length;
     HashingSpaceStandard _hashingSpace = new HashingSpaceStandard(_imgHash, _name);
-    _userHashingSpaces[msg.sender].push(_hashingSpace);
+    userInfo.userHashingSpaces.push(_hashingSpace);
   }
 
-  function userHashingSpaces(uint _idx) public view returns (HashingSpaceStandard) {
-    return _userHashingSpaces[msg.sender][_idx];
+  function getUserData(address _user) internal view returns (userHS memory userInfo) {
+    userInfo = userData[_user];
+  }
+
+  function getApiKey(uint _idx) public view returns (bytes32 apiKey) {
+    userHS memory userInfo = getUserData(msg.sender);
+    apiKey = userInfo.apiKeys[_idx];
   }
 }

@@ -1,15 +1,11 @@
 pragma solidity >= 0.5.0 < 0.7.0;
 
-import "./HashingSpaceStandard.sol";
+import "./HashingSpace.sol";
 
 contract Hub {
-  mapping(address => userHS) userData;
+  mapping(address => bytes32[]) userApiKeys;
+  mapping(bytes32 => HashingSpace) userHashingSpaces;
   address public owner;
-  struct userHS {
-    mapping(bytes32 => uint) apiIndex;
-    bytes32[] apiKeys;
-    HashingSpaceStandard[] userHashingSpaces;
-  }
 
   constructor() public {
     owner = msg.sender;
@@ -21,20 +17,17 @@ contract Hub {
   }
 
   function addHashingSpace(bytes32 _imgHash, string memory _name, address _user) public onlyOwner {
-    userHS storage userInfo = userData[_user];
     bytes32 _apiKey = keccak256(abi.encodePacked(_imgHash, _name, block.number));
-    userInfo.apiKeys.push(_apiKey);
-    userInfo.apiIndex[_apiKey] = userInfo.apiKeys.length;
-    HashingSpaceStandard _hashingSpace = new HashingSpaceStandard(_imgHash, _name);
-    userInfo.userHashingSpaces.push(_hashingSpace);
+    userApiKeys[_user].push(_apiKey);
+    HashingSpace _hashingSpace = new HashingSpace(_imgHash, _name);
+    userHashingSpaces[_apiKey] = _hashingSpace;
   }
 
-  function getUserData(address _user) internal view returns (userHS memory userInfo) {
-    userInfo = userData[_user];
+  function getApiKey(uint _idx, address _user) public view onlyOwner returns (bytes32 apiKey) {
+    apiKey = userApiKeys[_user][_idx];
   }
 
-  function getApiKey(uint _idx) public view returns (bytes32 apiKey) {
-    userHS memory userInfo = getUserData(msg.sender);
-    apiKey = userInfo.apiKeys[_idx];
+  function getHashingSpace(bytes32 apiKey) public view returns (HashingSpace hashingSpaceIndex) {
+    hashingSpaceIndex = userHashingSpaces[apiKey];
   }
 }

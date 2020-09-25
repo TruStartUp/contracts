@@ -1,5 +1,4 @@
 const Hub = artifacts.require('Hub');
-const HashingSpace = artifacts.require('HashingSpaceStandard');
 
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
@@ -44,8 +43,19 @@ contract('Hub', (accounts) => {
         .to.be.eventually.rejected;
     });
     it('should return the apiKey of the hashing space created', () => {
-      return hubDeployed.getApiKey(0, {from: alice})
-        .then((apiKey) => expect(apiKey).to.match(/0x[0-9a-fA-F]{64}/))
+      return hubDeployed.addHashingSpace(imageHash, 'web', alice)
+        .then(() => hubDeployed.getApiKey(0, alice))
+        .then((apiKey) => expect(apiKey).to.match(/0x[0-9a-fA-F]{64}/));
+    });
+    it('should not return the apiKey for other user not owner', () => {
+      return hubDeployed.addHashingSpace(imageHash, 'web', alice)
+        .then(() => expect(hubDeployed
+          .getApiKey(0, alice, {from: alice})).to.be.eventually.rejected);
+    });
+    it('should return the Hashing space address given an apiKey', () => {
+      return hubDeployed.getApiKey(0, alice)
+        .then((apiKey) => hubDeployed.getHashingSpace(apiKey))
+        .then((HSAddress) => expect(HSAddress).to.match(/0x[0-9a-fA-F]{40}/));
     });
   });
 });

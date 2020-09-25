@@ -1,6 +1,6 @@
 pragma solidity >= 0.5.0 < 0.7.0;
 
-contract HashingSpaceStandard {
+contract HashingSpace {
   bytes32 public imgHash;
   string public name;
   mapping(bytes32 => bool) hs;

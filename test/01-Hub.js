@@ -1,5 +1,4 @@
 const Hub = artifacts.require('Hub');
-const HashingSpace = artifacts.require('HashingSpaceStandard');
 
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
@@ -16,11 +15,14 @@ contract('Hub', (accounts) => {
     alice,
   ] = accounts;
   let hub;
+  let hubDeployed;
   beforeEach(async() => {
     const HubContract = new web3.eth.Contract(Hub.abi);
     const hubDeployment = HubContract.deploy({ data: Hub.bytecode });
     const hubGas = await hubDeployment.estimateGas({ from: owner });
     hub = await hubDeployment.send({ from: owner, gas: hubGas });
+
+    hubDeployed = await Hub.deployed();
   });
   describe('Deployment', () => {
     it('should get a valid instance after deployment', () => {
@@ -28,19 +30,32 @@ contract('Hub', (accounts) => {
     });
   });
   describe('Operational', () => {
-    it('should add a hashing space upon name and image hash', () => {
-      const addHashingSpaceSignature = hub.methods.addHashingSpace(imageHash, 'web');
-      return addHashingSpaceSignature.estimateGas({from: alice})
-        .then(gas => addHashingSpaceSignature.send({from: alice, gas}))
-        .then(() => hub.methods.userHashingSpaces(0).call({from: alice}))
-        .then(hashingSpaceAddress => {
-          expect(hashingSpaceAddress).to.match(/0x[a-fA-F0-9]{40}/);
-          return new web3.eth.Contract(HashingSpace.abi, hashingSpaceAddress);
-        })
-        .then(hashingSpace => hashingSpace.methods.name().call())
-        .then(name => {
-          expect(name).to.eq('web');
-        });
+    it('should return the owner of the Hub', () => {
+      return hub.methods.owner().call()
+        .then((owner) => expect(owner).to.eq(owner));
+    });
+    it('should allow only owner to add new hashing spaces', () => {
+      return hubDeployed.addHashingSpace(imageHash, 'web', alice)
+        .then((tx) => expect(tx.tx).to.match(/0x[0-9a-fA-F]{64}/));
+    });
+    it('should not allow other user not owner to add a new hashing space', () => {
+      return expect(hubDeployed.addHashingSpace(imageHash, 'web', alice, {from: alice}))
+        .to.be.eventually.rejected;
+    });
+    it('should return the apiKey of the hashing space created', () => {
+      return hubDeployed.addHashingSpace(imageHash, 'web', alice)
+        .then(() => hubDeployed.getApiKey(0, alice))
+        .then((apiKey) => expect(apiKey).to.match(/0x[0-9a-fA-F]{64}/));
+    });
+    it('should not return the apiKey for other user not owner', () => {
+      return hubDeployed.addHashingSpace(imageHash, 'web', alice)
+        .then(() => expect(hubDeployed
+          .getApiKey(0, alice, {from: alice})).to.be.eventually.rejected);
+    });
+    it('should return the Hashing space address given an apiKey', () => {
+      return hubDeployed.getApiKey(0, alice)
+        .then((apiKey) => hubDeployed.getHashingSpace(apiKey))
+        .then((HSAddress) => expect(HSAddress).to.match(/0x[0-9a-fA-F]{40}/));
     });
   });
 });

@@ -1,4 +1,4 @@
-const HashingSpace = artifacts.require('HashingSpaceStandard');
+const HashingSpace = artifacts.require('HashingSpace');
 
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');

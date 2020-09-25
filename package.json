@@ -7,7 +7,7 @@
     "url": "keybase://team/truchain/celo_contracts"
   },
   "scripts": {
-    "build": "truffle compile && rm -rf ../celoapi/api/contracts && cp -r ./build/contracts ../celoapi/api"
+    "build": "truffle compile"
   },
   "author": "",
   "license": "ISC",
